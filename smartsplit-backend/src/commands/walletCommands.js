@@ -2,6 +2,7 @@ const userService = require('../services/userService');
 
 async function handleConnectWallet(msg, bot) {
     const telegramId = msg.from.id;
+    const telegramHandle = msg.from.username;
     const args = msg.text.split(' ');
     
     if (args.length !== 2) {
@@ -11,7 +12,7 @@ async function handleConnectWallet(msg, bot) {
     const walletAddress = args[1];
     
     try {
-        await userService.connectWallet(telegramId, walletAddress);
+        await userService.connectWallet(telegramId, telegramHandle, walletAddress);
         bot.sendMessage(msg.chat.id, `Successfully connected wallet: ${walletAddress}`);
     } catch (error) {
         bot.sendMessage(msg.chat.id, 'Failed to connect wallet. Please try again.');

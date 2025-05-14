@@ -37,9 +37,10 @@ async function saveUsers(users) {
 }
 
 // Connect wallet to user
-async function connectWallet(telegramId, walletAddress) {
+async function connectWallet(telegramId, telegramHandle, walletAddress) {
     const users = await getUsers();
     users.users[telegramId] = {
+        telegramHandle,
         walletAddress,
         connectedAt: new Date().toISOString()
     };
@@ -51,6 +52,17 @@ async function connectWallet(telegramId, walletAddress) {
 async function getUserWallet(telegramId) {
     const users = await getUsers();
     return users.users[telegramId]?.walletAddress;
+}
+
+// Get user's wallet by handle
+async function getUserWalletByHandle(handle) {
+    const users = await getUsers();
+    for(const user of Object.values(users.users)) {
+        if(user.telegramHandle === handle) {
+            return user.walletAddress;
+        }
+    }
+    return null;
 }
 
 // Disconnect wallet from user
@@ -67,6 +79,7 @@ async function disconnectWallet(telegramId) {
 module.exports = {
     connectWallet,
     getUserWallet,
+    getUserWalletByHandle,
     disconnectWallet,
     getUsers
 }; 
