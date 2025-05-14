@@ -2,19 +2,19 @@ module botName::split_expense{
     //Import external modules
     use std::signer;
     use std::vector;
-    use aptos_framework::coin;
+    use std::table::{Table, self};
     use aptos_framework::aptos_coin;
+    use aptos_framework::coin;
 
     // Each indivdual member involved in the payment will have there own struct  (excluding the payer)
-    public struct MemberExpense {
-    addr: address,
-    owed: u64,
-    member_paid: bool,
-
+    public struct MemberExpense has copy, drop, store {
+        addr: address,
+        owed: u64,
+        member_paid: bool,
     }
 
-    // Final struct for one split payment
-    public struct ExpenseToSplit has key{ 
+    // Main data struct for one single expense
+    public struct ExpenseToSplit has copy, drop, store{ 
         id: u64,
         payer: address,
         members: vector<MemberExpense>,
@@ -23,6 +23,25 @@ module botName::split_expense{
         description: vector<u8>
     }
 
+    /// Storage container that maps expense_id → ExpenseToSplit
+    struct ExpenseStore has key {
+        expenses: Table<u64, ExpenseToSplit>
+    }
+
+    // Initialize store for a user
+    public entry fun InitStore(account: &signer) {
+        let expense_table = table::new<u64, ExpenseToSplit>();
+        move_to(account, ExpenseStore { expenses: expense_table });
+    }
+
+    fun EnsureExpenseStoreExists(account: &signer) {
+        let addr = signer::address_of(account);
+        if (!exists<ExpenseStore>(addr)) {
+            move_to(account, ExpenseStore { expenses: table::new() });
+        };
+    }
+
+    // Create a new expense and store it in the user's ExpenseStore
     public entry fun CreateExpense(
         account: &signer,
         id: u64,
@@ -32,11 +51,12 @@ module botName::split_expense{
         date_created: u64
     ) {
 
+        EnsureExpenseStoreExists(account);
+
         let payer = signer::address_of(account);
+        assert!(vector::length(&member_addresses) == vector::length(amounts_owed), 100); //Throw error if there is more amounts than members or vice versa
 
-        assert!(vector::length(member_addresses) == vector::length(amounts_owed), 100); //Throw error if there is more amounts than members or vice versa
-
-        let members = vector::empty<MemberExpense>();
+        let mut members = vector::empty<MemberExpense>();
         let len = vector::length(member_addresses);
         let mut i = 0;
 
@@ -59,8 +79,9 @@ module botName::split_expense{
             date_created,
             description,
         };
-        //Move the contract under the payers account
-        move_to(account, expense);
+
+        let store = borrow_global_mut<ExpenseStore>(payer);
+        table::add(&mut store.expenses, id, expense);
     }
 
     /* 
@@ -70,17 +91,18 @@ module botName::split_expense{
     If all member_paid is true then mark the ExpenseToSplit struct is_paid as true. 
     */
 
-    public fun PayExpense: (
-        &signer,
+    public entry fun PayExpense: (
+        account: &signer,
         payer_address: address,
         expense_id: u64
     ) {
+
         let sender = signer::address_of(account);
+        let store = borrow_global_mut<ExpenseStore>(payer_address);
+        let expense_ref = table::borrow_mut(&mut store.expenses, expense_id);
 
-        // Borrow the expense from the payer's storage
-        let expense_ref = &mut borrow_global_mut<ExpenseToSplit>(payer_address);
 
-        // Ensure the expense ID matches
+        // Ensure the expense ID matches   
         assert!(expense_ref.id == expense_id, 101);
 
         // Go through the members list and find the sender
@@ -92,7 +114,6 @@ module botName::split_expense{
             let member_ref = &mut vector::borrow_mut(&mut expense_ref.members, i);
 
             if (member_ref.addr == sender) {
-                found = true;
                 assert!(!member_ref.member_paid, 102); // Already paid
 
                 // Transfer the owed amount from sender to payer
@@ -101,6 +122,7 @@ module botName::split_expense{
 
                 // Mark as paid
                 member_ref.member_paid = true;
+                found = true;
 
                 // Check if all members have paid
                 let mut all_paid = true;
@@ -118,31 +140,37 @@ module botName::split_expense{
                 if (all_paid) {
                     expense_ref.is_paid = true;
                 };
-
                 return;
 
             };
             i = i + 1;
         };
+        assert!(found, 103); // Member not part of this expense
     }
 
-    public fun get_expense(expense_id: u64): Option<ExpenseToSplit> {
-        let expense_ref = borrow_global<ExpenseToSplit>(expense_id);
-        return Some(expense_ref);
+       /// View a specific expense by payer and id
+    public fun GetExpense(payer_address: address, expense_id: u64): Option<ExpenseToSplit> {
+        if (!exists<ExpenseStore>(payer_address)) return Option::none();
+        let store = borrow_global<ExpenseStore>(payer_address);
+        if (!table::contains(&store.expenses, expense_id)) return Option::none();
+        Option::some(table::borrow(&store.expenses, expense_id))
     }
 
-    public fun get_member_status(expense_id: u64, member_address: address): Option<MemberExpense> {
-        let expense_ref = borrow_global<ExpenseToSplit>(expense_id);
-        let len = vector::length(&expense_ref.members);
+    /// Check a specific member’s status in an expense
+    public fun GetMemberStatus(payer_address: address, expense_id: u64, member_address: address): Option<MemberExpense> {
+        if (!exists<ExpenseStore>(payer_address)) return Option::none();
+        let store = borrow_global<ExpenseStore>(payer_address);
+        if (!table::contains(&store.expenses, expense_id)) return Option::none();
+        let expense = table::borrow(&store.expenses, expense_id);
+
+        let len = vector::length(&expense.members);
         let mut i = 0;
         while (i < len) {
-            let member = &vector::borrow(&expense_ref.members, i);
-            if (member.addr == member_address) {
-                return Some(*member);
-            };
-             i = i + 1;
-        };
-        return None;
+            let m = &vector::borrow(&expense.members, i);
+            if (m.addr == member_address) return Option::some(*m);
+            i = i + 1;
+        }
+        Option::none()
     }
 
 }
