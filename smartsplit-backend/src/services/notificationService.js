@@ -34,7 +34,7 @@ async function notifyParticipants(expenseId, expense) {
             message += `@${participant.handle}: ${totalAmountInApt} APT\n`
         }
 
-        message += `\n\nTo pay your share, please visit:\n${process.env.DAPP_URL}/${expenseId}`;
+        message += `\n\nTo pay your share, please visit:\n${process.env.DAPP_URL}/pay/${expenseId}`;
 
         try {
             await bot.sendMessage(creatorChatId, message);
