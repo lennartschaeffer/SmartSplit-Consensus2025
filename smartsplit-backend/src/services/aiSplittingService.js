@@ -1,13 +1,13 @@
-const OpenAI = require('openai');
+//const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const userService = require('../services/userService');
 const expenseService = require('../services/expenseService');
 
 dotenv.config();
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// const openai = new OpenAI({
+//     //apiKey: process.env.OPENAI_API_KEY,
+// });
 
 const openAiPrompt = (sentence) => `
     Extract the total amount and currency mentioned in this sentence. Return in this format:
@@ -81,7 +81,8 @@ const processSplitRequest = async (msg) => {
         description: "test expense",
         status: 'PENDING_SIGNATURE',
         dateCreated: Date.now(),
-        creatorChatId: chatId // Store the chat ID of the creator
+        creatorChatId: chatId, // Store the chat ID of the creator
+        currency: "CAD"
     }
     // Store the expense details in the database
     await expenseService.storeExpense(mockExpense);
