@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/Header";
 import { ExpenseSigner } from "./src/components/ExpenseSigner";
+import { PaymentSigner } from "./src/components/PaymentSigner";
 
 function AppContent() {
   const { connected } = useWallet();
@@ -17,6 +18,7 @@ function AppContent() {
             <CardContent className="flex flex-col gap-10 pt-6">
               <Routes>
                 <Route path="/:expenseId" element={<ExpenseSigner />} />
+                <Route path="/pay/:expenseId" element={<PaymentSigner />} />
                 <Route path="/" element={
                   <div className="text-center py-12">
                     <h1 className="text-3xl font-bold text-gray-900 mb-4">

@@ -85,6 +85,109 @@
       "creatorChatId": -4770309183,
       "createdAt": "2025-05-15T17:54:54.849Z",
       "transactionHash": "0x2e75cc137b199a1f87e36b31f6a3063a8f824d8f1c80085f6d3d28374eb00976"
+    },
+    "1747332524": {
+      "expenseId": 1747332524,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "CONFIRMED",
+      "dateCreated": 1747332524508,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:08:44.509Z",
+      "transactionHash": "0x1f9521ed5d83659bfde3aab951510a2cf398b8d5b9e6bd8ccc5c9b2f7822686f"
+    },
+    "1747334072": {
+      "expenseId": 1747334072,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747334072606,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:34:32.607Z"
+    },
+    "1747334635": {
+      "expenseId": 1747334635,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747334635646,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:43:55.647Z"
+    },
+    "1747334705": {
+      "expenseId": 1747334705,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747334705252,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:45:05.252Z"
+    },
+    "1747335131": {
+      "expenseId": 1747335131,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747335131391,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:52:11.392Z"
+    },
+    "1747335363": {
+      "expenseId": 1747335363,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747335363710,
+      "creatorChatId": -4770309183,
+      "createdAt": "2025-05-15T18:56:03.711Z"
     }
   }
 }
