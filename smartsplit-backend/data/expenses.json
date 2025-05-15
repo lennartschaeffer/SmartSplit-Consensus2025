@@ -1,0 +1,54 @@
+{
+  "expenses": {
+    "123": {
+      "expenseId": 123,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49c",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "CONFIRMED",
+      "dateCreated": 1747311792809,
+      "createdAt": "2025-05-15T12:23:12.817Z",
+      "transactionHash": "0x0c1033166f8159d768439ad1529ff49cccefede0ae56afbe3a34db27b3db1f46"
+    },
+    "69420": {
+      "expenseId": 69420,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747329146073,
+      "createdAt": "2025-05-15T17:12:26.073Z"
+    },
+    "69421": {
+      "expenseId": 69421,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "CONFIRMED",
+      "dateCreated": 1747329249065,
+      "createdAt": "2025-05-15T17:14:09.066Z",
+      "transactionHash": "0xbda0f1b8946e5817e74828701946de3037790dc86955f661c745e1b55e7cd0ba"
+    }
+  }
+}
