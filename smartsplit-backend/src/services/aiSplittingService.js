@@ -70,8 +70,8 @@ const processSplitRequest = async (msg) => {
     // const amountsOwed = participantsWalletMapping.map(() => amountPerParticipant);
 
     // Generate a unique expense ID
-    // const expenseId = Math.floor(Date.now() / 1000);
-    const expenseId = 123;
+    const expenseId = Math.floor(Date.now() / 1000);
+    // const expenseId = 123;
     //create a mock expense to use for testing
     const mockExpense = {
         expenseId: expenseId,
