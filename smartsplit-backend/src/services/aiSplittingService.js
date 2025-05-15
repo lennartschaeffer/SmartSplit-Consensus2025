@@ -21,6 +21,7 @@ const openAiPrompt = (sentence) => `
 
 const processSplitRequest = async (msg) => {
     const telegramId = msg.from.id;
+    const chatId = msg.chat.id;
     const creatorWalletAddress = await userService.getUserWallet(telegramId);
 
     if (!creatorWalletAddress) {
@@ -79,7 +80,8 @@ const processSplitRequest = async (msg) => {
         amountsOwed: [50, 50],
         description: "test expense",
         status: 'PENDING_SIGNATURE',
-        dateCreated: Date.now()
+        dateCreated: Date.now(),
+        creatorChatId: chatId // Store the chat ID of the creator
     }
     // Store the expense details in the database
     await expenseService.storeExpense(mockExpense);

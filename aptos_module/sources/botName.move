@@ -173,4 +173,10 @@ module botName::split_expense{
     //     return option::none();
     // }
 
+    // Delete the ExpenseStore resource
+    public entry fun delete_store(account: &signer) acquires ExpenseStore {
+        let addr = signer::address_of(account);
+        let _store = move_from<ExpenseStore>(addr);
+    }
+
 }

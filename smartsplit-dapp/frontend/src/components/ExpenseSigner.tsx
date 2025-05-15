@@ -41,6 +41,29 @@ export function ExpenseSigner() {
         fetchExpense();
     }, [expenseId]);
 
+    const initializeStore = async () => {
+        if (!account) return;
+
+        try {
+            console.log('Initializing store for account:', account.address);
+            const transaction: InputTransactionData = {
+                data: {
+                    function: `${MODULE_ADDRESS}::split_expense::InitStore`,
+                    typeArguments: [],
+                    functionArguments: []
+                }
+            };
+
+            const response = await signAndSubmitTransaction(transaction);
+            const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
+            await aptos.waitForTransaction({ transactionHash: response.hash });
+            return true;
+        } catch (err) {
+            console.log('Store initialization error (may already exist):', err);
+            return true;
+        }
+    };
+
     const handleSign = async () => {
         if (!expense || !account) return;
 
@@ -48,22 +71,44 @@ export function ExpenseSigner() {
             setTransactionInProgress(true);
             setError(null);
 
+            // Validate account matches expense creator
+            if (account.address.toString() !== expense.creatorWalletAddress) {
+                throw new Error(`Account mismatch: You must use the account that created this expense (${expense.creatorWalletAddress})`);
+            }
+
+            console.log('Creating expense with account:', account.address.toString());
+            console.log('Expense creator address:', expense.creatorWalletAddress);
+
+            // First ensure the store is initialized
+            try {
+                //await initializeStore();
+            } catch (err) {
+                console.log('Store initialization error:', err);
+                // If initialization fails, we should still try to create the expense
+                // as the store might already exist
+            }
+
             // Convert description to bytes
             const encoder = new TextEncoder();
             const bytes = encoder.encode(expense.description);
 
-
-            // Create the transaction payload
+            // Arguments must match the order in the Move contract:
+            // 1. account: &signer (handled by wallet adapter)
+            // 2. id: u64
+            // 3. member_addresses: vector<address>
+            // 4. amounts_owed: vector<u64>
+            // 5. description: vector<u8>
+            // 6. date_created: u64
             const transaction: InputTransactionData = {
                 data: {
                     function: `${MODULE_ADDRESS}::split_expense::CreateExpense`,
                     typeArguments: [],
                     functionArguments: [
-                        expense.expenseId,
-                        expense.memberAddresses,
-                        expense.amountsOwed,
-                        Array.from(bytes),
-                        expense.dateCreated
+                        expense.expenseId,  // id: u64
+                        expense.memberAddresses,  // member_addresses: vector<address>
+                        expense.amountsOwed,  // amounts_owed: vector<u64>
+                        Array.from(bytes),  // description: vector<u8>
+                        expense.dateCreated  // date_created: u64
                     ]
                 }
             };

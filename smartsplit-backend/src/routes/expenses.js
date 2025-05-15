@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const expenseService = require('../services/expenseService');
+const notificationService = require('../services/notificationService');
 
 // Get expense by ID
 router.get('/:expenseId', async (req, res) => {
@@ -33,6 +34,9 @@ router.post('/:expenseId/confirm', async (req, res) => {
         if (!expense) {
             return res.status(404).json({ error: 'Expense not found' });
         }
+
+        // Send notifications to participants
+        await notificationService.notifyParticipants(req.params.expenseId, expense);
 
         res.json(expense);
     } catch (error) {
