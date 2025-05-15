@@ -4,8 +4,8 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-
-[dev-addresses]
+botName = "_"
+testNewExpense = "_"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
