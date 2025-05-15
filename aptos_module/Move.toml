@@ -5,7 +5,7 @@ authors = []
 
 [addresses]
 botName = "_"
-testNewExpense = "_"
+testCRUDStore = "0xA"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"

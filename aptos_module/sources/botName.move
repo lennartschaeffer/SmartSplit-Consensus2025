@@ -13,6 +13,10 @@ module botName::split_expense{
         owed: u64,
     }
 
+    public fun get_owed_member_addr(owed: &OwedMember): address {
+        return owed.addr
+    }
+
     // Each indivdual member involved in the payment will have there own struct  (excluding the payer)
     public struct MemberExpense has copy, drop, store {
         addr: address,
