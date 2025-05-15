@@ -1,4 +1,5 @@
 const { processSplitRequest } = require('../services/aiSplittingService');
+const currencyToApt = require('../services/currencyToApt');
 
 const handleCreateSplit = async (msg, bot) => {
     try {
@@ -9,14 +10,20 @@ const handleCreateSplit = async (msg, bot) => {
             return;
         }
 
-        // Format the message with dApp URL
+        // Convert the total amount to APT
+        const totalAmountInApt = await currencyToApt(result.amount, result.currency);
+
+        // Calculate the amount per participant in APT
+        const amountPerParticipantInApt = totalAmountInApt / result.participantsWalletMapping.length;
+
+        // Format the message with dApp URL and converted amounts
         const message = `Split created successfully!\n\n` +
-            `Amount: ${result.amount} ${result.currency}\n` +
+            `Total Amount: ${result.amount} ${result.currency} (~${totalAmountInApt.toFixed(2)} APT)\n` +
             `Split between ${result.participantsWalletMapping.length} participants\n\n` +
-            `To complete the split, please visit:\n${result.dAppUrl}\n\n` +
+            `To comple please visit:\n${result.dAppUrl}\n\n` +
             `Participants:\n` +
             result.participantsWalletMapping.map(p =>
-                `@${p.telegramHandle}: ${result.amount / result.participantsWalletMapping.length} ${result.currency}`
+                `@${p.telegramHandle}: ${amountPerParticipantInApt.toFixed(2)} APT`
             ).join('\n');
 
         bot.sendMessage(msg.chat.id, message);

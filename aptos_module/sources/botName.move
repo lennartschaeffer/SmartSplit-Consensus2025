@@ -111,11 +111,11 @@ module botName::split_expense {
     */
     public entry fun PayExpense (
         account: &signer,
-        payer_address: address,
+        creator_address: address,
         expense_id: u64
     ) acquires ExpenseStore {
         let sender = signer::address_of(account);
-        let store = borrow_global_mut<ExpenseStore>(payer_address);
+        let store = borrow_global_mut<ExpenseStore>(creator_address);
         let expense_ref = table::borrow_mut(&mut store.expenses, expense_id);
 
 
@@ -134,7 +134,7 @@ module botName::split_expense {
 
                 // Transfer the owed amount from sender to payer
                 let coins = coin::withdraw<AptosCoin>(account, member_ref.owed);
-                coin::deposit<AptosCoin>(payer_address, coins);
+                coin::deposit<AptosCoin>(creator_address, coins);
 
                 // Mark as paid
                 member_ref.member_paid = true;
@@ -162,32 +162,6 @@ module botName::split_expense {
     }
 
 
-       // View a specific expense by payer and id
-    // public fun GetExpense(payer_address: address, expense_id: u64): Option<ExpenseToSplit> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     option::some(table::borrow(&store.expenses, expense_id))
-    // }
-
-    // // Check a specific members status in an expense
-    // public fun GetMemberStatus(payer_address: address, expense_id: u64, member_address: address): Option<MemberExpense> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     let expense = table::borrow(&store.expenses, expense_id);
-
-    //     let len = vector::length(&expense.members);
-    //     let i = 0;
-    //     while (i < len) {
-    //         let m = &vector::borrow(&expense.members, i);
-    //         if (m.addr == member_address) return option::some(*m);
-    //         i = i + 1;
-    //     };
-    //     return option::none();
-    // }
-
-}
     public fun GetOwedMembers(
         payer_address: address,
         expense_id: u64
