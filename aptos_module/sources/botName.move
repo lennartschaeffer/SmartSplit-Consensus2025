@@ -157,6 +157,33 @@ module botName::split_expense{
         assert!(false, 103);// Member not part of this expense
     }
 
+
+       // View a specific expense by payer and id
+    // public fun GetExpense(payer_address: address, expense_id: u64): Option<ExpenseToSplit> {
+    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
+    //     let store = borrow_global<ExpenseStore>(payer_address);
+    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
+    //     option::some(table::borrow(&store.expenses, expense_id))
+    // }
+
+    // // Check a specific members status in an expense
+    // public fun GetMemberStatus(payer_address: address, expense_id: u64, member_address: address): Option<MemberExpense> {
+    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
+    //     let store = borrow_global<ExpenseStore>(payer_address);
+    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
+    //     let expense = table::borrow(&store.expenses, expense_id);
+
+    //     let len = vector::length(&expense.members);
+    //     let i = 0;
+    //     while (i < len) {
+    //         let m = &vector::borrow(&expense.members, i);
+    //         if (m.addr == member_address) return option::some(*m);
+    //         i = i + 1;
+    //     };
+    //     return option::none();
+    // }
+
+}
     public fun GetOwedMembers(
         payer_address: address,
         expense_id: u64
@@ -187,4 +214,3 @@ module botName::split_expense{
     }
 }
 
-  
