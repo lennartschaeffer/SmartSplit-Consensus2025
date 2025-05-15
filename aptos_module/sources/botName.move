@@ -4,6 +4,7 @@ module botName::split_expense{
     use std::vector;
     use std::table::Table;
     use aptos_std::table;
+    use 0x1::aptos_coin::{Self, AptosCoin};
     use 0x1::coin;
     //use aptos_std::option; Helpers? 
 
@@ -50,7 +51,7 @@ module botName::split_expense{
         amounts_owed: vector<u64>,
         description: vector<u8>,
         date_created: u64
-    ) {
+    ) acquires ExpenseStore {
 
         EnsureExpenseStoreExists(account);
 
@@ -96,7 +97,7 @@ module botName::split_expense{
         account: &signer,
         payer_address: address,
         expense_id: u64
-    ) {
+    ) acquires ExpenseStore {
 
         let sender = signer::address_of(account);
         let store = borrow_global_mut<ExpenseStore>(payer_address);
@@ -107,7 +108,6 @@ module botName::split_expense{
         assert!(expense_ref.id == expense_id, 101);
 
         // Go through the members list and find the sender
-        let found = false;
         let i = 0;
         let len = vector::length(&expense_ref.members);
 
@@ -118,12 +118,11 @@ module botName::split_expense{
                 assert!(!member_ref.member_paid, 102); // Already paid
 
                 // Transfer the owed amount from sender to payer
-                let coins = coin::withdraw<0x1::aptos_coin::AptosCoin>(account, member_ref.owed);
-                coin::deposit<0x1::aptos_coin::AptosCoin>(payer_address, coins);    
+                let coins = coin::withdraw<AptosCoin>(account, member_ref.owed);
+                coin::deposit<AptosCoin>(payer_address, coins);    
 
                 // Mark as paid
                 member_ref.member_paid = true;
-                found = true;
 
                 // Check if all members have paid
                 let all_paid = true;
@@ -146,7 +145,7 @@ module botName::split_expense{
             };
             i = i + 1;
         };
-        assert!(found, 103); // Member not part of this expense
+        assert!(false, 103);// Member not part of this expense
     }
 
        // View a specific expense by payer and id
