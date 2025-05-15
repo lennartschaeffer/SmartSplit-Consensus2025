@@ -26,10 +26,12 @@ async function notifyParticipants(expenseId, expense) {
         }
         console.log('Sending notifications to participants:', participants);
 
+        const totalAmountInApt = await currencyToApt(expense.amount, expense.currency);
+
         let message = `🔔 New expense to pay!\n\n`
         // Send notification to each participant
         for (const participant of participants) {
-            message += `@${participant.handle}: ${expense.amountsOwed[expense.memberAddresses.indexOf(participant.walletAddress)]} APT\n`
+            message += `@${participant.handle}: ${totalAmountInApt} APT\n`
         }
 
         message += `\n\nTo pay your share, please visit:\n${process.env.DAPP_URL}/pay/${expenseId}`;

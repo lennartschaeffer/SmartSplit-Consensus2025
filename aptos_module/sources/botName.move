@@ -1,5 +1,5 @@
-module botName::split_expense{
-    //Import external modules
+module botName::split_expense {
+    // Import external modules
     use std::signer;
     use std::vector;
     use std::table::Table;
@@ -8,24 +8,19 @@ module botName::split_expense{
     use 0x1::coin;
     //use aptos_std::option; Helpers? 
 
+    // Data Structures
     struct OwedMember has copy, drop, store {
         addr: address,
         owed: u64,
     }
 
-    public fun get_owed_member_addr(owed: &OwedMember): address {
-        return owed.addr
-    }
-
-    // Each indivdual member involved in the payment will have there own struct  (excluding the payer)
     public struct MemberExpense has copy, drop, store {
         addr: address,
         owed: u64,
         member_paid: bool,
     }
 
-    // Main data struct for one single expense
-    public struct ExpenseToSplit has copy, drop, store{ 
+    public struct ExpenseToSplit has copy, drop, store {
         id: u64,
         payer: address,
         members: vector<MemberExpense>,
@@ -34,12 +29,26 @@ module botName::split_expense{
         description: vector<u8>
     }
 
-    /// Storage container that maps expense_id ExpenseToSplit
     struct ExpenseStore has key {
         expenses: Table<u64, ExpenseToSplit>
     }
 
-    // Initialize store for a user
+    // Getters
+    public fun get_owed_member_addr(owed: &OwedMember): address {
+        return owed.addr
+    }
+
+    public fun get_expense(payer: address, expense_id: u64): ExpenseToSplit acquires ExpenseStore {
+        let store = borrow_global<ExpenseStore>(payer);
+        let expense_ref = table::borrow(&store.expenses, expense_id);
+        return *expense_ref
+    }
+
+    public fun is_expense_paid(expense: &ExpenseToSplit): bool {
+        expense.is_paid
+    }
+
+    // Store Initialization and Management
     public entry fun InitStore(account: &signer) {
         let expense_table = table::new<u64, ExpenseToSplit>();
         move_to(account, ExpenseStore { expenses: expense_table });
@@ -52,7 +61,7 @@ module botName::split_expense{
         };
     }
 
-    // Create a new expense and store it in the users ExpenseStore
+    // Expense Management
     public entry fun CreateExpense(
         account: &signer,
         id: u64,
@@ -61,11 +70,10 @@ module botName::split_expense{
         description: vector<u8>,
         date_created: u64
     ) acquires ExpenseStore {
-
         EnsureExpenseStoreExists(account);
 
         let payer = signer::address_of(account);
-        assert!(vector::length(&member_addresses) == vector::length(&amounts_owed), 100); //Throw error if there is more amounts than members or vice versa
+        assert!(vector::length(&member_addresses) == vector::length(&amounts_owed), 100); 
 
         let members = vector::empty<MemberExpense>();
         let len = vector::length(&member_addresses);
@@ -101,15 +109,13 @@ module botName::split_expense{
     Then check to see if this person is the last to pay the expense. Do this buy looping through members and checking the status of member_paid
     If all member_paid is true then mark the ExpenseToSplit struct is_paid as true. 
     */
-
     public entry fun PayExpense (
         account: &signer,
-        payer_address: address,
+        creator_address: address,
         expense_id: u64
     ) acquires ExpenseStore {
-
         let sender = signer::address_of(account);
-        let store = borrow_global_mut<ExpenseStore>(payer_address);
+        let store = borrow_global_mut<ExpenseStore>(creator_address);
         let expense_ref = table::borrow_mut(&mut store.expenses, expense_id);
 
 
@@ -128,7 +134,7 @@ module botName::split_expense{
 
                 // Transfer the owed amount from sender to payer
                 let coins = coin::withdraw<AptosCoin>(account, member_ref.owed);
-                coin::deposit<AptosCoin>(payer_address, coins);    
+                coin::deposit<AptosCoin>(creator_address, coins);
 
                 // Mark as paid
                 member_ref.member_paid = true;
@@ -145,50 +151,21 @@ module botName::split_expense{
                     j = j + 1;
                 };
 
-                //If all paid set the main expense as is_paid true
                 if (all_paid) {
                     expense_ref.is_paid = true;
                 };
                 return;
-
             };
             i = i + 1;
         };
-        assert!(false, 103);// Member not part of this expense
+        assert!(false, 103);
     }
 
 
-       // View a specific expense by payer and id
-    // public fun GetExpense(payer_address: address, expense_id: u64): Option<ExpenseToSplit> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     option::some(table::borrow(&store.expenses, expense_id))
-    // }
-
-    // // Check a specific members status in an expense
-    // public fun GetMemberStatus(payer_address: address, expense_id: u64, member_address: address): Option<MemberExpense> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     let expense = table::borrow(&store.expenses, expense_id);
-
-    //     let len = vector::length(&expense.members);
-    //     let i = 0;
-    //     while (i < len) {
-    //         let m = &vector::borrow(&expense.members, i);
-    //         if (m.addr == member_address) return option::some(*m);
-    //         i = i + 1;
-    //     };
-    //     return option::none();
-    // }
-
-}
     public fun GetOwedMembers(
         payer_address: address,
         expense_id: u64
     ): vector<OwedMember> acquires ExpenseStore {
-
         assert!(exists<ExpenseStore>(payer_address), 100);
         let store = borrow_global<ExpenseStore>(payer_address);
         let expense = table::borrow(&store.expenses, expense_id);

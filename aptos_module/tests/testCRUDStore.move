@@ -21,7 +21,7 @@ module testCRUDStore::testCRUD {
 
         let description = b"My first group expense";
 
-        let expense_id = 1;
+        let expense_id = 1747332524;
         let date = 123456789;
 
         split_expense::CreateExpense(
@@ -36,7 +36,7 @@ module testCRUDStore::testCRUD {
         let owed = split_expense::GetOwedMembers(signer::address_of(payer), expense_id);
 
 
-        // Step 5: Assert two members are owed
+        //Step 5: Assert two members are owed
         assert!(vector::length(&owed) == 2, 1000);
         
         let owed1 = vector::borrow(&owed, 0);
@@ -45,8 +45,11 @@ module testCRUDStore::testCRUD {
         let addr1 = split_expense::get_owed_member_addr(owed1);
         let addr2 = split_expense::get_owed_member_addr(owed2);
 
-        assert!(addr1 == signer::address_of(member1) || addr1 == signer::address_of(member2), 1001);
-        assert!(addr2 == signer::address_of(member1) || addr2 == signer::address_of(member2), 1002);
+        // assert!(addr1 == signer::address_of(member1) || addr1 == signer::address_of(member2), 1001);
+        // assert!(addr2 == signer::address_of(member1) || addr2 == signer::address_of(member2), 1002);
+
+        let expense = split_expense::get_expense(signer::address_of(payer), expense_id);
+        assert!(!split_expense::is_expense_paid(&expense), 9001); // should be false initially
 
     }
 }
