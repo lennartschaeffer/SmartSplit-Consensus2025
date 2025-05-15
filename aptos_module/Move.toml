@@ -4,12 +4,12 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-botName = "_"
-testNewExpense = "_"
+botName = "0xda003f930e513b83e65e5b8e047310ba26663a301f671e33f815ef84b4c4d139"
+testNewExpense = "0xda003f930e513b83e65e5b8e047310ba26663a301f671e33f815ef84b4c4d139"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-framework.git"
-rev = "mainnet"
+rev = "testnet"
 subdir = "aptos-framework"
 
 [dev-dependencies]
