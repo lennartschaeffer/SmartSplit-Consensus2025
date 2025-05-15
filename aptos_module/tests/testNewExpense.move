@@ -14,7 +14,7 @@ module testNewExpense::tests {
         coin::register<aptos_coin::AptosCoin>(member1);
         coin::register<aptos_coin::AptosCoin>(member2);
 
-        let (freeze, burn, mint_cap) = aptos_coin::claim_mint_capability(payer);
+        let (_, _, mint_cap) = aptos_coin::claim_mint_capability(payer);
 
 
         coin::mint<aptos_coin::AptosCoin>(1_000_000, mint_cap);

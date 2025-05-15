@@ -8,6 +8,11 @@ module botName::split_expense{
     use 0x1::coin;
     //use aptos_std::option; Helpers? 
 
+    struct OwedMember has copy, drop, store {
+        addr: address,
+        owed: u64,
+    }
+
     // Each indivdual member involved in the payment will have there own struct  (excluding the payer)
     public struct MemberExpense has copy, drop, store {
         addr: address,
@@ -148,29 +153,34 @@ module botName::split_expense{
         assert!(false, 103);// Member not part of this expense
     }
 
-       // View a specific expense by payer and id
-    // public fun GetExpense(payer_address: address, expense_id: u64): Option<ExpenseToSplit> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     option::some(table::borrow(&store.expenses, expense_id))
-    // }
+    public fun GetOwedMembers(
+        payer_address: address,
+        expense_id: u64
+    ): vector<OwedMember> acquires ExpenseStore {
 
-    // // Check a specific members status in an expense
-    // public fun GetMemberStatus(payer_address: address, expense_id: u64, member_address: address): Option<MemberExpense> {
-    //     if (!exists<ExpenseStore>(payer_address)) return option::none();
-    //     let store = borrow_global<ExpenseStore>(payer_address);
-    //     if (!table::contains(&store.expenses, expense_id)) return option::none();
-    //     let expense = table::borrow(&store.expenses, expense_id);
+        assert!(exists<ExpenseStore>(payer_address), 100);
+        let store = borrow_global<ExpenseStore>(payer_address);
+        let expense = table::borrow(&store.expenses, expense_id);
 
-    //     let len = vector::length(&expense.members);
-    //     let i = 0;
-    //     while (i < len) {
-    //         let m = &vector::borrow(&expense.members, i);
-    //         if (m.addr == member_address) return option::some(*m);
-    //         i = i + 1;
-    //     };
-    //     return option::none();
-    // }
+        let owed_members = vector::empty<OwedMember>();
+        let len = vector::length(&expense.members);
+        let i = 0;
 
+        while (i < len) {
+            let member_ref = vector::borrow(&expense.members, i);
+
+            if (!member_ref.member_paid) {
+                let owed_member = OwedMember {
+                    addr: member_ref.addr,
+                    owed: member_ref.owed,
+                };
+                vector::push_back(&mut owed_members, owed_member);
+            };
+            i = i + 1;
+        };
+
+        return owed_members
+    }
 }
+
+  
