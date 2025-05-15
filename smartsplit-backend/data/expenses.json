@@ -1,0 +1,20 @@
+{
+  "expenses": {
+    "123": {
+      "expenseId": 123,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49b"
+      ],
+      "amountsOwed": [
+        50,
+        50
+      ],
+      "description": "test expense",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747311792809,
+      "createdAt": "2025-05-15T12:23:12.817Z"
+    }
+  }
+}
