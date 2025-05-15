@@ -26,19 +26,20 @@ async function notifyParticipants(expenseId, expense) {
         }
         console.log('Sending notifications to participants:', participants);
 
+        let message = `🔔 New expense to pay!\n\n`
         // Send notification to each participant
         for (const participant of participants) {
-            const message = `🔔 New expense to pay!\n\n` +
-                `Description: ${expense.description}\n` +
-                `Amount: ${expense.amountsOwed[expense.memberAddresses.indexOf(participant.walletAddress)]} APT\n\n` +
-                `To pay your share, please visit:\n${process.env.DAPP_URL}/${expenseId}`;
+            message += `@${participant.handle}: ${expense.amountsOwed[expense.memberAddresses.indexOf(participant.walletAddress)]} APT\n`
+        }
 
-            try {
-                await bot.sendMessage(participant.chatId, message);
-                console.log(`Notification sent to @${participant.handle}`);
-            } catch (error) {
-                console.error(`Failed to send notification to @${participant.handle}:`, error.message);
-            }
+        message += `\n\nTo pay your share, please visit:\n${process.env.DAPP_URL}/${expenseId}`;
+
+        try {
+            await bot.sendMessage(creatorChatId, message);
+            console.log('Notification sent to creator');
+        } catch (error) {
+            console.error('Failed to send notification to creator:', error.message);
+            return false;
         }
 
         return true;
