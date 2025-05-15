@@ -73,13 +73,14 @@ module botName::split_expense {
         EnsureExpenseStoreExists(account);
 
         let payer = signer::address_of(account);
-        assert!(vector::length(&member_addresses) == vector::length(&amounts_owed), 100);
+        assert!(vector::length(&member_addresses) == vector::length(&amounts_owed), 100); 
 
         let members = vector::empty<MemberExpense>();
         let len = vector::length(&member_addresses);
         let i = 0;
 
-        while (i < len) {
+        //Create an member expense for each 
+        while(i < len){
             let member = MemberExpense {
                 addr: *vector::borrow(&member_addresses, i),
                 owed: *vector::borrow(&amounts_owed, i),
@@ -88,7 +89,7 @@ module botName::split_expense {
             vector::push_back(&mut members, member);
             i = i + 1;
         };
-
+        
         let expense = ExpenseToSplit {
             id,
             payer,
@@ -102,7 +103,13 @@ module botName::split_expense {
         table::add(&mut store.expenses, id, expense);
     }
 
-    public entry fun PayExpense(
+    /* 
+    Gets a references to the expense, then checks that the member who is attempting to pay is actually shared on the expense. 
+    Once member is confirmed to be on the expense checks if this member has paid or not if they have not send the money in APT coin
+    Then check to see if this person is the last to pay the expense. Do this buy looping through members and checking the status of member_paid
+    If all member_paid is true then mark the ExpenseToSplit struct is_paid as true. 
+    */
+    public entry fun PayExpense (
         account: &signer,
         payer_address: address,
         expense_id: u64
@@ -111,8 +118,11 @@ module botName::split_expense {
         let store = borrow_global_mut<ExpenseStore>(payer_address);
         let expense_ref = table::borrow_mut(&mut store.expenses, expense_id);
 
+
+        // Ensure the expense ID matches   
         assert!(expense_ref.id == expense_id, 101);
 
+        // Go through the members list and find the sender
         let i = 0;
         let len = vector::length(&expense_ref.members);
 
@@ -120,13 +130,16 @@ module botName::split_expense {
             let member_ref = &mut expense_ref.members[i];
 
             if (member_ref.addr == sender) {
-                assert!(!member_ref.member_paid, 102);
+                assert!(!member_ref.member_paid, 102); // Already paid
 
+                // Transfer the owed amount from sender to payer
                 let coins = coin::withdraw<AptosCoin>(account, member_ref.owed);
                 coin::deposit<AptosCoin>(payer_address, coins);
 
+                // Mark as paid
                 member_ref.member_paid = true;
 
+                // Check if all members have paid
                 let all_paid = true;
                 let j = 0;
                 while (j < len) {
