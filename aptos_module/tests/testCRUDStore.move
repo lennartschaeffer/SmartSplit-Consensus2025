@@ -48,5 +48,8 @@ module testCRUDStore::testCRUD {
         assert!(addr1 == signer::address_of(member1) || addr1 == signer::address_of(member2), 1001);
         assert!(addr2 == signer::address_of(member1) || addr2 == signer::address_of(member2), 1002);
 
+        let expense = split_expense::get_expense(signer::address_of(payer), expense_id);
+        assert!(!split_expense::is_expense_paid(&expense), 9001); // should be false initially
+
     }
 }
