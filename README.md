@@ -8,23 +8,30 @@ SmartSplit is a decentralized application (dApp) that makes it easy to split exp
 
 ## How the Flow Works
 
-1. **Create a Split (Telegram Bot)**
+1. **Connect Wallet (Telegram Bot)**
+   - Before creating splits, users need to connect their Aptos wallet to their Telegram account
+   - Users send `/connect` to the bot with their public wallet address
+   - This creates a mapping between their Telegram username and their Aptos wallet address, so other group members can easily mention them and create a transaction
+   - Used for validation when users sign their transactions
+   - Once connected, users can participate in splits in any group where the bot is present
+
+2. **Create a Split (Telegram Bot)**
    - A user initiates a split in a Telegram group by sending a command and a natural language explanation of the expense (e.g., `/create_split 100 CAD for dinner last night with @alice and @bob`).
    - The bot parses the message, uses AI to extract the amount, currency, and description, and checks that all users have connected their wallets.
 
-2. **Expense Creation**
+3. **Expense Creation**
    - The bot generates a unique expense and stores it in the backend, allowing the frontend dApp to quickly pull expense details when signing a transaction.
    - A message is sent to the group chat with an expense summary, and a link for the creator to sign the transaction and create the expense on-chain.
 
-3. **Signing the Expense (dApp)**
+4. **Signing the Expense (dApp)**
    - The expense creator visits the dApp link, connects their Aptos wallet, and signs a transaction to create the expense on-chain. 
    - The telegram bot sends out a new message, tagging participants of the expense and specifying the amount to pay in APT, and a link for them to pay their share
 
-4. **Paying a Share**
+5. **Paying a Share**
    - Each participant connects their wallet and pays their share directly through the dApp.
    - The dApp updates the payment status in real time, showing which participants have paid.
 
-5. **Completion**
+6. **Completion**
    - Once all shares are paid, the smart contract will update the expense to be completed, and the telegram bot notifies the group in Telegram that their expense is completed.
 
 ---
