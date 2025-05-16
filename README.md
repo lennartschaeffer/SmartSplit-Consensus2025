@@ -78,6 +78,9 @@ SmartSplit is a decentralized application (dApp) that makes it easy to split exp
 ### Payment Confirmation
 ![Payment Confirmation](./images_UI/paymentcomplete.png)
 
+### Video Demo Link
+
+Full Demo: https://drive.google.com/file/d/1sL2Btd1__fad8C_isZzJLw_HPW9WjE3T/view
 ---
 
 ## Technologies Used

@@ -6,9 +6,9 @@ const currencyToApt = require('../services/currencyToApt');
 
 dotenv.config();
 
-// const openai = new OpenAI({
-//     //apiKey: process.env.OPENAI_API_KEY,
-// });
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
 const openAiPrompt = (sentence) => `
     Extract the total amount and currency mentioned in this sentence. Return in this format:
@@ -55,21 +55,18 @@ const processSplitRequest = async (msg) => {
     const sentence = msg.text.replace("/create_split", "").trim();
     const prompt = openAiPrompt(sentence);
 
-    // const response = await openai.chat.completions.create({
-    //     model: "gpt-3.5-turbo",
-    //     messages: [{ role: "user", content: prompt }],
-    // });
+    const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+    });
 
-    // const currency = JSON.parse(response.choices[0].message.content);
-    // if (currency.error) {
-    //     return { error: currency.error };
-    // }
-
-    // Calculate amount per participant
-    const currency = {
-        amount: 100,
+    const openAIResponse = JSON.parse(response.choices[0].message.content);
+    if (openAIResponse.error) {
+        return { error: openAIResponse.error };
     }
-    const amountPerParticipant = currency.amount / participantsWalletMapping.length;
+
+
+    const amountPerParticipant = openAIResponse.amount / participantsWalletMapping.length;
     const memberAddresses = participantsWalletMapping.map(p => p.walletAddress);
     const amountsOwed = await Promise.all(participantsWalletMapping.map(async () => await currencyToApt(amountPerParticipant, "CAD")));
 
@@ -106,8 +103,8 @@ const processSplitRequest = async (msg) => {
     return {
         creatorWalletAddress,
         participantsWalletMapping,
-        amount: 100,
-        currency: "CAD",
+        amount: openAIResponse.amount,
+        currency: openAIResponse.currency,
         expenseId,
         dAppUrl
     };
