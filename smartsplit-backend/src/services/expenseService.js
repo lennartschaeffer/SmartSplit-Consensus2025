@@ -67,6 +67,15 @@ async function updateExpenseStatus(expenseId, status, transactionHash) {
     return null;
 }
 
+//update expense when a user pays their share
+const updateExpenseWhenUserPays = async (expenseId, userAddress) => {
+    const expenses = await getExpenses();
+    //get the index of the user in the memberAddresses array
+    const index = expenses.expenses[expenseId].memberAddresses.indexOf(userAddress);
+    //remove the 
+    await saveExpenses(expenses);
+}
+
 module.exports = {
     storeExpense,
     getExpenseById,

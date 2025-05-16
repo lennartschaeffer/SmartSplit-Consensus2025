@@ -37,7 +37,7 @@ module botName::split_expense {
     public fun get_owed_member_addr(owed: &OwedMember): address {
         return owed.addr
     }
-
+    #[view]
     public fun get_expense(payer: address, expense_id: u64): ExpenseToSplit acquires ExpenseStore {
         let store = borrow_global<ExpenseStore>(payer);
         let expense_ref = table::borrow(&store.expenses, expense_id);

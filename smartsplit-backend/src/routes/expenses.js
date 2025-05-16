@@ -45,4 +45,16 @@ router.post('/:expenseId/confirm', async (req, res) => {
     }
 });
 
+router.post('/:expenseId/complete', async (req, res) => {
+    try {
+        const expenseId = req.params.expenseId;
+        await notificationService.sendExpenseCompletionMessage(expenseId);
+        res.json({ message: 'Expense completion message sent' });
+    } catch (error) {
+        console.error('Error sending expense completion message:', error);
+        res.status(500).json({ error: 'Failed to send expense completion message' });
+    }
+});
+
+
 module.exports = router; 

@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const userService = require('../services/userService');
 const expenseService = require('../services/expenseService');
+const currencyToApt = require('../services/currencyToApt');
 
 dotenv.config();
 
@@ -65,9 +66,13 @@ const processSplitRequest = async (msg) => {
     // }
 
     // Calculate amount per participant
-    // const amountPerParticipant = currency.amount / participantsWalletMapping.length;
+    const currency = {
+        amount: 100,
+    }
+    const amountPerParticipant = currency.amount / participantsWalletMapping.length;
     const memberAddresses = participantsWalletMapping.map(p => p.walletAddress);
-    // const amountsOwed = participantsWalletMapping.map(() => amountPerParticipant);
+    const amountsOwed = await Promise.all(participantsWalletMapping.map(async () => await currencyToApt(amountPerParticipant, "CAD")));
+
 
     // Generate a unique expense ID
     const expenseId = Math.floor(Date.now() / 1000);
@@ -77,7 +82,7 @@ const processSplitRequest = async (msg) => {
         expenseId: expenseId,
         creatorWalletAddress: creatorWalletAddress,
         memberAddresses: memberAddresses,
-        amountsOwed: [50, 50],
+        amountsOwed: amountsOwed,
         description: "test expense",
         status: 'PENDING_SIGNATURE',
         dateCreated: Date.now(),
@@ -87,14 +92,22 @@ const processSplitRequest = async (msg) => {
     // Store the expense details in the database
     await expenseService.storeExpense(mockExpense);
 
+    console.log("Expense stored in the database");
+    console.log(mockExpense);
+
     // Generate the dApp URL for the creator to sign the transaction
     const dAppUrl = `${process.env.DAPP_URL}/${expenseId}`;
+
+    const payUrl = `${process.env.DAPP_URL}/pay/${expenseId}`;
+    let message = `To pay your share, <a href="${payUrl}">click here</a>`;
+
+    // await bot.sendMessage(creatorChatId, message, { parse_mode: "HTML" });
 
     return {
         creatorWalletAddress,
         participantsWalletMapping,
         amount: 100,
-        currency: "USD",
+        currency: "CAD",
         expenseId,
         dAppUrl
     };
