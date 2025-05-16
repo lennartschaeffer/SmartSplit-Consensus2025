@@ -83,7 +83,7 @@ const processSplitRequest = async (msg) => {
         creatorWalletAddress: creatorWalletAddress,
         memberAddresses: memberAddresses,
         amountsOwed: amountsOwed,
-        description: "test expense",
+        description: "Dinner Last Night",
         status: 'PENDING_SIGNATURE',
         dateCreated: Date.now(),
         creatorChatId: chatId, // Store the chat ID of the creator

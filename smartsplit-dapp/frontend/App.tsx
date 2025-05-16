@@ -15,7 +15,7 @@ function AppContent() {
       <Header />
       <div className="flex items-center justify-center flex-col">
         {connected ? (
-          <Card className="border-none shadow-lg mt-10">
+          <Card className="border-none shadow-lg mt-10 bg-gray-900">
             <CardContent className="flex flex-col gap-10 pt-6 bg-gray-900 rounded-lg border-none">
               <Routes>
                 <Route path="/:expenseId" element={<ExpenseSigner />} />
