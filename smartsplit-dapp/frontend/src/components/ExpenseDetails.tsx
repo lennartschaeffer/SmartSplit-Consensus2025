@@ -39,7 +39,6 @@ export function ExpenseDetails({ expense }: ExpenseDetailsProps) {
     };
 
     // Check if current user is a member
-    const isCurrentUserMember = account ? expense.members.some(m => m.addr === account.address.toString()) : false;
 
     return (
         <div className="bg-gray-800 shadow-lg rounded-lg p-8 mb-4 text-gray-100">
