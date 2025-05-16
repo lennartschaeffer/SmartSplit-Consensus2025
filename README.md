@@ -80,7 +80,8 @@ SmartSplit is a decentralized application (dApp) that makes it easy to split exp
 
 ### Video Demo Link
 
-Full Demo: https://drive.google.com/file/d/1sL2Btd1__fad8C_isZzJLw_HPW9WjE3T/view
+Full Demo: https://drive.google.com/file/d/1sL2Btd1__fad8C_isZzJLw_HPW9WjE3T/view <br>
+Short 30 second Demo: https://drive.google.com/file/d/1K1X0F_5gMR7kKcbDc3SRH6nO8IfMghw8/view?usp=sharing <br>
 GitHub Repo Explanation: https://drive.google.com/file/d/1pmu2FaZX_CwdNi1MLt4gOb--Op29mKj1/view
 ---
 
