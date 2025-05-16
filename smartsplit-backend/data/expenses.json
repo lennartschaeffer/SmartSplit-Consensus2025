@@ -526,6 +526,25 @@
       "currency": "CAD",
       "createdAt": "2025-05-16T03:38:19.484Z",
       "transactionHash": "0x2189cae78c95d859a23fc87f83608369b8f57d71a8ac4857131363fdb64b3757"
+    },
+    "1747370314": {
+      "expenseId": 1747370314,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0xf8fafd5e167741017d847acf7a21b7dabc8395fe97046967607524e4aac08818",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a"
+      ],
+      "amountsOwed": [
+        6.666666666666667,
+        6.666666666666667
+      ],
+      "description": "test expense",
+      "status": "CONFIRMED",
+      "dateCreated": 1747370314841,
+      "creatorChatId": -4770309183,
+      "currency": "CAD",
+      "createdAt": "2025-05-16T04:38:34.842Z",
+      "transactionHash": "0xdb5d1b3fb5bd32a4a28f0df2453816340b315603f13a4e29b4432d1f01ba7fc9"
     }
   }
 }
