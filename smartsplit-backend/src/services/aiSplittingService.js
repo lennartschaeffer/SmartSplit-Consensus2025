@@ -1,12 +1,14 @@
-const OpenAI = require('openai');
+//const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const userService = require('../services/userService');
+const expenseService = require('../services/expenseService');
+const currencyToApt = require('../services/currencyToApt');
 
 dotenv.config();
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// const openai = new OpenAI({
+//     //apiKey: process.env.OPENAI_API_KEY,
+// });
 
 const openAiPrompt = (sentence) => `
     Extract the total amount and currency mentioned in this sentence. Return in this format:
@@ -15,24 +17,29 @@ const openAiPrompt = (sentence) => `
     Input:
     '${sentence}'
     
-    If no amount is mentioned, return {"error": "No amount mentioned"}
+    If no amount is mentioned or no currency is mentioned, return {"error": "No amount or currency mentioned"}
     `
 
-//based on a message, like "Me and @bob went to the store, the pill was 100$, we need to split it"
-//get the openAI response to return an appropriate JSON object to feed into the smart contract
-const getSplitFromOpenAI = async (msg, bot) => {
-    //sample message: "I want to split this $100 bill 3 ways with @mark and @bob"  
-    //the first thing needed is the creator wallet address
+const processSplitRequest = async (msg) => {
     const telegramId = msg.from.id;
+    const chatId = msg.chat.id;
     const creatorWalletAddress = await userService.getUserWallet(telegramId);
+
+    if (!creatorWalletAddress) {
+        return { error: "Please connect your wallet first using /connect command" };
+    }
+
     let participantsWalletMapping = [];
-    //create the mapping of telegram handles to wallet addresses
     if (msg.entities) {
         for (const entity of msg.entities) {
             if (entity.type === 'mention') {
                 const handle = msg.text.substring(entity.offset, entity.offset + entity.length).replace("@", "");
-                //now get the wallet address by handle
                 const walletAddress = await userService.getUserWalletByHandle(handle);
+
+                if (!walletAddress) {
+                    return { error: `User @${handle} has not connected their wallet yet` };
+                }
+
                 participantsWalletMapping.push({
                     telegramHandle: handle,
                     walletAddress: walletAddress
@@ -40,40 +47,72 @@ const getSplitFromOpenAI = async (msg, bot) => {
             }
         }
     }
-    //remove the command from the message
+
+    if (participantsWalletMapping.length === 0) {
+        return { error: "Please mention at least one participant using @username" };
+    }
+
     const sentence = msg.text.replace("/create_split", "").trim();
     const prompt = openAiPrompt(sentence);
-    console.log(prompt);
 
-    const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-    });
+    // const response = await openai.chat.completions.create({
+    //     model: "gpt-3.5-turbo",
+    //     messages: [{ role: "user", content: prompt }],
+    // });
 
-    const currency = JSON.parse(response.choices[0].message.content);
-    if (currency.error) {
-        bot.sendMessage(msg.chat.id, currency.error);
-        return;
+    // const currency = JSON.parse(response.choices[0].message.content);
+    // if (currency.error) {
+    //     return { error: currency.error };
+    // }
+
+    // Calculate amount per participant
+    const currency = {
+        amount: 100,
     }
-    //update the participantsWalletMapping with the amount for each participant
-    //assume it's split evenly
-    for (const participant of participantsWalletMapping) {
-        participant.amount = (currency.amount / participantsWalletMapping.length);
-    }
+    const amountPerParticipant = currency.amount / participantsWalletMapping.length;
+    const memberAddresses = participantsWalletMapping.map(p => p.walletAddress);
+    const amountsOwed = await Promise.all(participantsWalletMapping.map(async () => await currencyToApt(amountPerParticipant, "CAD")));
 
-    const transaction = {
+
+    // Generate a unique expense ID
+    const expenseId = Math.floor(Date.now() / 1000);
+    // const expenseId = 123;
+    //create a mock expense to use for testing
+    const mockExpense = {
+        expenseId: expenseId,
         creatorWalletAddress: creatorWalletAddress,
-        participantsWalletMapping: participantsWalletMapping,
-        amount: currency.amount,
-        currency: currency.currency
+        memberAddresses: memberAddresses,
+        amountsOwed: amountsOwed,
+        description: "Dinner Last Night",
+        status: 'PENDING_SIGNATURE',
+        dateCreated: Date.now(),
+        creatorChatId: chatId, // Store the chat ID of the creator
+        currency: "CAD"
     }
+    // Store the expense details in the database
+    await expenseService.storeExpense(mockExpense);
 
-    console.log(transaction);
+    console.log("Expense stored in the database");
+    console.log(mockExpense);
 
-    bot.sendMessage(msg.chat.id, "done testing...");
+    // Generate the dApp URL for the creator to sign the transaction
+    const dAppUrl = `${process.env.DAPP_URL}/${expenseId}`;
 
-}
+    const payUrl = `${process.env.DAPP_URL}/pay/${expenseId}`;
+    let message = `To pay your share, <a href="${payUrl}">click here</a>`;
+
+    // await bot.sendMessage(creatorChatId, message, { parse_mode: "HTML" });
+
+    return {
+        creatorWalletAddress,
+        participantsWalletMapping,
+        amount: 100,
+        currency: "CAD",
+        expenseId,
+        dAppUrl
+    };
+};
 
 module.exports = {
-    getSplitFromOpenAI
-}
+    processSplitRequest
+};

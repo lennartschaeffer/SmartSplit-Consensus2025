@@ -1,0 +1,16 @@
+[package]
+name = "botName"
+version = "1.0.0"
+authors = []
+
+[addresses]
+botName = "070d8a633688cd6d29f688788110feffacedbf42c8ac68e1c14aca6bbfe880c8"
+testNewExpense = "070d8a633688cd6d29f688788110feffacedbf42c8ac68e1c14aca6bbfe880c8"
+testCRUDStore = "0xA"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "testnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
