@@ -1,7 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Internal Components
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/Header";
 import { ExpenseSigner } from "./src/components/ExpenseSigner";
 import { PaymentSigner } from "./src/components/PaymentSigner";

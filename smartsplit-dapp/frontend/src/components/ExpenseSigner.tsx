@@ -42,28 +42,6 @@ export function ExpenseSigner() {
         fetchExpense();
     }, [expenseId]);
 
-    const initializeStore = async () => {
-        if (!account) return;
-
-        try {
-            console.log('Initializing store for account:', account.address);
-            const transaction: InputTransactionData = {
-                data: {
-                    function: `${MODULE_ADDRESS}::split_expense::InitStore`,
-                    typeArguments: [],
-                    functionArguments: []
-                }
-            };
-
-            const response = await signAndSubmitTransaction(transaction);
-            const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
-            await aptos.waitForTransaction({ transactionHash: response.hash });
-            return true;
-        } catch (err) {
-            console.log('Store initialization error (may already exist):', err);
-            return true;
-        }
-    };
 
     const handleSign = async () => {
         if (!expense || !account) return;
