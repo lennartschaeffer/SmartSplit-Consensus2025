@@ -581,6 +581,80 @@
       "creatorChatId": -4770309183,
       "currency": "CAD",
       "createdAt": "2025-05-16T11:05:58.610Z"
+    },
+    "1747395820": {
+      "expenseId": 1747395820,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0xf8fafd5e167741017d847acf7a21b7dabc8395fe97046967607524e4aac08818",
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a"
+      ],
+      "amountsOwed": [
+        6.605019815059445,
+        6.605019815059445
+      ],
+      "description": "Dinner Last Night",
+      "status": "CONFIRMED",
+      "dateCreated": 1747395820775,
+      "creatorChatId": -4955562659,
+      "currency": "CAD",
+      "createdAt": "2025-05-16T11:43:40.776Z",
+      "transactionHash": "0xa4df3ea98269b94a1c91f4f3d8212f28e23f68a0ce12566be8223881940d48b0"
+    },
+    "1747396961": {
+      "expenseId": 1747396961,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0xf8fafd5e167741017d847acf7a21b7dabc8395fe97046967607524e4aac08818"
+      ],
+      "amountsOwed": [
+        6.613756613756614,
+        6.613756613756614
+      ],
+      "description": "Dinner Last Night",
+      "status": "CONFIRMED",
+      "dateCreated": 1747396961258,
+      "creatorChatId": -4955562659,
+      "currency": "CAD",
+      "createdAt": "2025-05-16T12:02:41.260Z",
+      "transactionHash": "0x71281fab53ba11eb324a5052655644dfa1366c9fa9606a6d6ceff143d7c8e30d"
+    },
+    "1747403757": {
+      "expenseId": 1747403757,
+      "creatorWalletAddress": "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0xf8fafd5e167741017d847acf7a21b7dabc8395fe97046967607524e4aac08818"
+      ],
+      "amountsOwed": [
+        6.622516556291391,
+        6.622516556291391
+      ],
+      "description": "Dinner Last Night",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747403757000,
+      "creatorChatId": -4955562659,
+      "currency": "CAD",
+      "createdAt": "2025-05-16T13:55:57.001Z"
+    },
+    "1747405117": {
+      "expenseId": 1747405117,
+      "creatorWalletAddress": "0x944c676e81ffd1765e3b85b01b8cb84217d1c8f39255b85e5a8140195c67b785",
+      "memberAddresses": [
+        "0x6e7f6d49391e51698bf838df06fb4db0e91eaaafedae0071ec85b6a74ab0c49a",
+        "0xf8fafd5e167741017d847acf7a21b7dabc8395fe97046967607524e4aac08818"
+      ],
+      "amountsOwed": [
+        6.622516556291391,
+        6.622516556291391
+      ],
+      "description": "Dinner Last Night",
+      "status": "PENDING_SIGNATURE",
+      "dateCreated": 1747405117842,
+      "creatorChatId": -4955562659,
+      "currency": "CAD",
+      "createdAt": "2025-05-16T14:18:37.844Z"
     }
   }
 }
