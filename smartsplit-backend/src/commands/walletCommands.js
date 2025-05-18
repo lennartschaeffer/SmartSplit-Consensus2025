@@ -1,16 +1,16 @@
 const userService = require('../services/userService');
 
-async function handleConnectWallet(msg, bot) {
+const handleConnectWallet = async (msg, bot) => {
     const telegramId = msg.from.id;
     const telegramHandle = msg.from.username;
     const args = msg.text.split(' ');
-    
+
     if (args.length !== 2) {
         return bot.sendMessage(msg.chat.id, 'Please provide your wallet address in the format: /connect <wallet_address>');
     }
 
     const walletAddress = args[1];
-    
+
     try {
         await userService.connectWallet(telegramId, telegramHandle, walletAddress);
         bot.sendMessage(msg.chat.id, `Successfully connected wallet: ${walletAddress}`);
@@ -19,9 +19,9 @@ async function handleConnectWallet(msg, bot) {
     }
 }
 
-async function handleDisconnectWallet(msg, bot) {
+const handleDisconnectWallet = async (msg, bot) => {
     const telegramId = msg.from.id;
-    
+
     try {
         const success = await userService.disconnectWallet(telegramId);
         if (success) {
@@ -34,9 +34,9 @@ async function handleDisconnectWallet(msg, bot) {
     }
 }
 
-async function handleShowWallet(msg, bot) {
+const handleShowWallet = async (msg, bot) => {
     const telegramId = msg.from.id;
-    
+
     try {
         const walletAddress = await userService.getUserWallet(telegramId);
         if (walletAddress) {

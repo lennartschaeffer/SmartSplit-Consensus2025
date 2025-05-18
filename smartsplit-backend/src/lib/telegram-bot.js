@@ -1,9 +1,9 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const { handleConnectWallet, handleDisconnectWallet, handleShowWallet } = require('./commands/walletCommands');
-const { handleCreateSplit } = require('./commands/ai-splittingCommands');
-const bot = require('./services/telegramBot');
+const { handleConnectWallet, handleDisconnectWallet, handleShowWallet } = require('../commands/walletCommands');
+const { handleCreateSplit } = require('../commands/ai-splittingCommands');
+const bot = require('../services/telegramBot');
 
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;

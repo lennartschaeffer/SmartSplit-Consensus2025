@@ -3,8 +3,8 @@ const path = require('path');
 
 const EXPENSE_DATA_FILE = path.resolve(__dirname, '../../data/expenses.json');
 
-// Ensure the data directory exists
-async function ensureDataDirectory() {
+
+const ensureDataDirectory = async () => {
     const dataDir = path.dirname(EXPENSE_DATA_FILE);
     try {
         await fs.access(dataDir);
@@ -13,8 +13,7 @@ async function ensureDataDirectory() {
     }
 }
 
-// Initialize expenses file if it doesn't exist
-async function initializeExpensesFile() {
+const initializeExpensesFile = async () => {
     try {
         await fs.access(EXPENSE_DATA_FILE);
     } catch {
@@ -22,22 +21,19 @@ async function initializeExpensesFile() {
     }
 }
 
-// Get all expenses
-async function getExpenses() {
+const getExpenses = async () => {
     await ensureDataDirectory();
     await initializeExpensesFile();
     const data = await fs.readFile(EXPENSE_DATA_FILE, 'utf8');
     return JSON.parse(data);
 }
 
-// Save expenses
-async function saveExpenses(expenses) {
+const saveExpenses = async (expenses) => {
     await ensureDataDirectory();
     await fs.writeFile(EXPENSE_DATA_FILE, JSON.stringify(expenses, null, 2));
 }
 
-// Store a new expense
-async function storeExpense(expense) {
+const storeExpense = async (expense) => {
     const expenses = await getExpenses();
     expenses.expenses[expense.expenseId] = {
         ...expense,
@@ -47,14 +43,12 @@ async function storeExpense(expense) {
     return expenses.expenses[expense.expenseId];
 }
 
-// Get expense by ID
-async function getExpenseById(expenseId) {
+const getExpenseById = async (expenseId) => {
     const expenses = await getExpenses();
     return expenses.expenses[expenseId];
 }
 
-// Update expense status
-async function updateExpenseStatus(expenseId, status, transactionHash) {
+const updateExpenseStatus = async (expenseId, status, transactionHash) => {
     const expenses = await getExpenses();
     if (expenses.expenses[expenseId]) {
         expenses.expenses[expenseId].status = status;
@@ -67,14 +61,7 @@ async function updateExpenseStatus(expenseId, status, transactionHash) {
     return null;
 }
 
-//update expense when a user pays their share
-const updateExpenseWhenUserPays = async (expenseId, userAddress) => {
-    const expenses = await getExpenses();
-    //get the index of the user in the memberAddresses array
-    const index = expenses.expenses[expenseId].memberAddresses.indexOf(userAddress);
-    //remove the 
-    await saveExpenses(expenses);
-}
+
 
 module.exports = {
     storeExpense,

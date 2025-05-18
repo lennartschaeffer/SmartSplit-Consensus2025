@@ -2,8 +2,8 @@ const app = require('./app');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-// Import the bot to ensure it's initialized
-require('./telegram-bot');
+//import bot
+require('./lib/telegram-bot');
 
 const PORT = process.env.PORT || 3000;
 

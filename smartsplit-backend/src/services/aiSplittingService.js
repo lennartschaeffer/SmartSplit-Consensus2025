@@ -1,4 +1,4 @@
-//const OpenAI = require('openai');
+const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const userService = require('../services/userService');
 const expenseService = require('../services/expenseService');
@@ -11,13 +11,13 @@ const openai = new OpenAI({
 });
 
 const openAiPrompt = (sentence) => `
-    Extract the total amount and currency mentioned in this sentence. Return in this format:
-    { "amount": 100, "currency": "USD" }
+    Extract the total amount and currency mentioned in this sentence, as well as the description of the expense. Return in this format:
+    { "amount": 100, "currency": "USD", "description": "Dinner Last Night" }
 
     Input:
     '${sentence}'
     
-    If no amount is mentioned or no currency is mentioned, return {"error": "No amount or currency mentioned"}
+    If no amount, description or currency is mentioned, return {"error": "No amount, description or currency mentioned"}
     `
 
 const processSplitRequest = async (msg) => {
@@ -74,23 +74,23 @@ const processSplitRequest = async (msg) => {
     // Generate a unique expense ID
     const expenseId = Math.floor(Date.now() / 1000);
     // const expenseId = 123;
-    //create a mock expense to use for testing
-    const mockExpense = {
+
+    const expense = {
         expenseId: expenseId,
         creatorWalletAddress: creatorWalletAddress,
         memberAddresses: memberAddresses,
         amountsOwed: amountsOwed,
-        description: "Dinner Last Night",
+        description: openAIResponse.description,
         status: 'PENDING_SIGNATURE',
         dateCreated: Date.now(),
         creatorChatId: chatId, // Store the chat ID of the creator
-        currency: "CAD"
+        currency: openAIResponse.currency
     }
     // Store the expense details in the database
-    await expenseService.storeExpense(mockExpense);
+    await expenseService.storeExpense(expense);
 
     console.log("Expense stored in the database");
-    console.log(mockExpense);
+    console.log(expense);
 
     // Generate the dApp URL for the creator to sign the transaction
     const dAppUrl = `${process.env.DAPP_URL}/${expenseId}`;

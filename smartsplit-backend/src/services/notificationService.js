@@ -2,19 +2,17 @@ const userService = require('./userService');
 const bot = require('./telegramBot');
 const expenseService = require('./expenseService');
 
-async function notifyParticipants(expenseId, expense) {
+const notifyParticipants = async (expenseId, expense) => {
     try {
-        // Get the creator's chat ID from the expense
+
         const creatorChatId = expense.creatorChatId;
         if (!creatorChatId) {
             console.error('No creator chat ID found in expense');
             return false;
         }
 
-        // Get all users to find their Telegram IDs
         const users = await userService.getUsers();
 
-        // Find participants' Telegram IDs
         const participants = [];
         for (const [telegramId, user] of Object.entries(users.users)) {
             if (expense.memberAddresses.includes(user.walletAddress)) {
@@ -29,7 +27,7 @@ async function notifyParticipants(expenseId, expense) {
         const sumOfExpenses = expense.amountsOwed.reduce((acc, curr) => acc + curr, 0);
 
         let message = `🔔 New expense to pay!\n\n`
-        // Send notification to each participant
+        //send notification to each participant
         for (const participant of participants) {
             message += `@${participant.handle}: ${(sumOfExpenses / participants.length).toFixed(2)} APT\n`
         }

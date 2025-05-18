@@ -2,7 +2,7 @@ const axios = require('axios')
 
 let res;
 
-async function returnCurrencies(amount, currency){
+const returnCurrencies = async (amount, currency) => {
     switch (currency) {
         case 'CAD':
             res = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=aptos&vs_currencies=cad');

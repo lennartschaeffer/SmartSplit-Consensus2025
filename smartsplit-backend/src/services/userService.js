@@ -4,7 +4,7 @@ const path = require('path');
 const USER_DATA_FILE = path.resolve(__dirname, '../../data/users.json');
 
 // Ensure the data directory exists
-async function ensureDataDirectory() {
+const ensureDataDirectory = async () => {
     const dataDir = path.dirname(USER_DATA_FILE);
     try {
         await fs.access(dataDir);
@@ -14,7 +14,7 @@ async function ensureDataDirectory() {
 }
 
 // Initialize users file if it doesn't exist
-async function initializeUsersFile() {
+const initializeUsersFile = async () => {
     try {
         await fs.access(USER_DATA_FILE);
     } catch {
@@ -23,7 +23,7 @@ async function initializeUsersFile() {
 }
 
 // Get all users
-async function getUsers() {
+const getUsers = async () => {
     await ensureDataDirectory();
     await initializeUsersFile();
     const data = await fs.readFile(USER_DATA_FILE, 'utf8');
@@ -31,13 +31,13 @@ async function getUsers() {
 }
 
 // Save users
-async function saveUsers(users) {
+const saveUsers = async (users) => {
     await ensureDataDirectory();
     await fs.writeFile(USER_DATA_FILE, JSON.stringify(users, null, 2));
 }
 
 // Connect wallet to user
-async function connectWallet(telegramId, telegramHandle, walletAddress) {
+const connectWallet = async (telegramId, telegramHandle, walletAddress) => {
     const users = await getUsers();
     users.users[telegramId] = {
         telegramHandle,
@@ -49,16 +49,16 @@ async function connectWallet(telegramId, telegramHandle, walletAddress) {
 }
 
 // Get user's wallet
-async function getUserWallet(telegramId) {
+const getUserWallet = async (telegramId) => {
     const users = await getUsers();
     return users.users[telegramId]?.walletAddress;
 }
 
 // Get user's wallet by handle
-async function getUserWalletByHandle(handle) {
+const getUserWalletByHandle = async (handle) => {
     const users = await getUsers();
-    for(const user of Object.values(users.users)) {
-        if(user.telegramHandle === handle) {
+    for (const user of Object.values(users.users)) {
+        if (user.telegramHandle === handle) {
             return user.walletAddress;
         }
     }
@@ -66,7 +66,7 @@ async function getUserWalletByHandle(handle) {
 }
 
 // Disconnect wallet from user
-async function disconnectWallet(telegramId) {
+const disconnectWallet = async (telegramId) => {
     const users = await getUsers();
     if (users.users[telegramId]) {
         delete users.users[telegramId];
