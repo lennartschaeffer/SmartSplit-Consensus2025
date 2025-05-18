@@ -2,7 +2,7 @@
 
 ## Overview
 
-SmartSplit is a Telegram bot that makes splitting group expenses as natural as having a conversation. Simply describe your expense in plain English in your group chat, and the bot handles the rest, from parsing the details to managing secure payments on the Aptos blockchain.g.
+SmartSplit is a Telegram bot that makes splitting group expenses as natural as having a conversation. Simply describe your expense in plain English in your group chat, and the bot handles the rest, from parsing the details to managing secure payments on the Aptos blockchain.
 
 ---
 
